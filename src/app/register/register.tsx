@@ -9,8 +9,16 @@ const Register = () => {
 
   const handleRegister = () => {
     if (username && password && email) {
+      const userData = { username, password, email };
+
+      const expirationTime = new Date().getTime() + 1800000;
+
+      sessionStorage.setItem('userData', JSON.stringify(userData));
+      sessionStorage.setItem('expirationTime', expirationTime.toString());
+
       alert(`ลงทะเบียนสำเร็จ!\nชื่อผู้ใช้งาน: ${username}\nอีเมล: ${email}`);
-      window.location.href = 'https://github.com/sherlocKPath';
+
+      window.location.href = '/';
     } else {
       alert('กรุณากรอกข้อมูลให้ครบทุกช่อง');
     }
