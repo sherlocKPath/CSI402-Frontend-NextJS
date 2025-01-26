@@ -1,15 +1,35 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 const Login = () => {
   const [username, setUsername] = useState('');
 
+  useEffect(() => {
+    const storedUserData = sessionStorage.getItem('userData');
+    const expirationTime = sessionStorage.getItem('expirationTime');
+    if (storedUserData && expirationTime) {
+      const currentTime = new Date().getTime();
+      if (currentTime > Number(expirationTime)) {
+        sessionStorage.removeItem('userData');
+        sessionStorage.removeItem('expirationTime');
+        alert('เวลาของการลงทะเบียนชั่วคราวหมดอายุแล้ว กรุณาลงทะเบียนใหม่');
+      }
+    }
+  }, []);
+
   const handleLogin = () => {
-    if (username === 'admin') {
-      alert('ยินดีต้อนรับ! คุณสามารถใช้งานระบบได้');
+    const storedUserData = sessionStorage.getItem('userData');
+    if (storedUserData) {
+      const userData = JSON.parse(storedUserData);
+      if (username === userData.username) {
+        alert('ยินดีต้อนรับ! คุณสามารถใช้งานระบบได้');
+        window.location.href = 'https://github.com/sherlocKPath/CSI402-Frontend-NextJS';
+      } else {
+        alert('ชื่อผู้ใช้งานไม่ถูกต้อง หรือไม่มีสิทธิ์ใช้งาน');
+      }
     } else {
-      alert('ชื่อผู้ใช้งานไม่มีสิทธิ์ กรุณาลงทะเบียนเพื่อใช้งานชั่วคราว');
+      alert('ไม่มีข้อมูลผู้ใช้งานในระบบ');
     }
   };
 
